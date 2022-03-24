@@ -2,15 +2,16 @@ package xls
 
 import (
 	"fmt"
+	"testing"
 )
 
-func ExampleOpen() {
+func TestExampleOpen(t *testing.T) {
 	if xlFile, err := Open("Table.xls", "utf-8"); err == nil {
 		fmt.Println(xlFile.Author)
 	}
 }
 
-func ExampleWorkBook_NumberSheets() {
+func TestExampleWorkBook_NumberSheets(t *testing.T) {
 	if xlFile, err := Open("Table.xls", "utf-8"); err == nil {
 		for i := 0; i < xlFile.NumSheets(); i++ {
 			sheet := xlFile.GetSheet(i)
@@ -20,7 +21,7 @@ func ExampleWorkBook_NumberSheets() {
 }
 
 //Output: read the content of first two cols in each row
-func ExampleWorkBook_GetSheet() {
+func TestExampleWorkBook_GetSheet(t *testing.T) {
 	if xlFile, err := Open("Table.xls", "utf-8"); err == nil {
 		if sheet1 := xlFile.GetSheet(0); sheet1 != nil {
 			fmt.Print("Total Lines ", sheet1.MaxRow, sheet1.Name)
@@ -34,4 +35,27 @@ func ExampleWorkBook_GetSheet() {
 			}
 		}
 	}
+}
+
+func TestExampleWorkBook_GetAll(t *testing.T) {
+	fileName := "Table.xls"
+	xlFile, err := Open(fileName, "utf-8")
+	if err != nil {
+		panic(err)
+		return
+	}
+
+	for k := 0; k < xlFile.NumSheets(); k++ {
+		if sheet1 := xlFile.GetSheet(k); sheet1 != nil {
+			fmt.Print("Total Lines ", sheet1.MaxRow, sheet1.Name)
+			for i := 0; i <= (int(sheet1.MaxRow)); i++ {
+				row1 := sheet1.Row(i)
+				for j := 0; j < row1.LastCol(); j++ {
+					fmt.Print(row1.Col(j) + " ")
+				}
+				fmt.Print("/n")
+			}
+		}
+	}
+
 }
